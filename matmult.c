@@ -103,11 +103,11 @@ int main(int argc, char * argv[])
     perror("error");
     goto failure;
   }
-  
+
   clock_t elapsed = clock() - start;
   size_t data_size = nrows * ncols + ncols * ncols2;
-  printf("data_size, elapsed(microsecond)\n");
-  printf("%d, %d\n", data_size, elapsed);
+//  printf("data_size, elapsed(microsecond)\n");
+  printf("%d, %d, %d, %d, %d\n", nrows, ncols, ncols2, data_size, elapsed);
 
   free(A);
   free(B);
