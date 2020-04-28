@@ -11,7 +11,10 @@
 #include <stdlib.h>
 
 #include <time.h>
-
+#include <sys/time.h>
+#include <stdbool.h>
+static const double min = -10;
+static const double max = 10;
 static int create_mat(size_t const nrows, size_t const ncols, double ** const matp)
 {
   double * mat=NULL;
@@ -23,7 +26,9 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
     size_t i, j;
     for (i=0; i<nrows; ++i) {
         for (j=0; j<ncols; ++j) {
-            mat[i*nrows+j] = (double)rand();
+            //Generate random value between min and max
+            double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
+            mat[i*nrows+j] = val;
         }
     }
   /** End random initialization **/
@@ -94,17 +99,26 @@ int main(int argc, char * argv[])
     perror("error");
     goto failure;
   }
-
-  clock_t start = clock();
+  //Warm up cache 1st
+    if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
+        perror("error");
+        goto failure;
+    }
+    //Warm up cache 2nd
+    if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
+        perror("error");
+        goto failure;
+    }
+    struct timeval start, end;
+    gettimeofday(&start,NULL);
   if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
     perror("error");
     goto failure;
   }
-
-  clock_t elapsed = clock() - start;
+    gettimeofday(&end,NULL);
+    int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
   size_t data_size = nrows * ncols + ncols * ncols2;
-//  printf("data_size, elapsed(microsecond)\n");
-  printf("%zu, %zu, %zu, %zu, %lu\n", nrows, ncols, ncols2, data_size, elapsed);
+  printf("%zu, %zu, %zu, %zu, %d\n", nrows, ncols, ncols2, data_size, elapsed);
 
   free(A);
   free(B);
