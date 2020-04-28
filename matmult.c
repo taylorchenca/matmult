@@ -26,7 +26,6 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
             mat[i*nrows+j] = (double)rand();
         }
     }
-
   /** End random initialization **/
 
   *matp = mat;
@@ -35,8 +34,6 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
 
   cleanup:
   free(mat);
-
-  failure:
   return -1;
 }
 
@@ -107,7 +104,7 @@ int main(int argc, char * argv[])
   clock_t elapsed = clock() - start;
   size_t data_size = nrows * ncols + ncols * ncols2;
 //  printf("data_size, elapsed(microsecond)\n");
-  printf("%d, %d, %d, %d, %d\n", nrows, ncols, ncols2, data_size, elapsed);
+  printf("%zu, %zu, %zu, %zu, %lu\n", nrows, ncols, ncols2, data_size, elapsed);
 
   free(A);
   free(B);
