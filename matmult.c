@@ -53,6 +53,22 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
   if (!(C=malloc(n*p*sizeof(*C)))) {
     goto cleanup;
   }
+    for (i=0; i<n; ++i) {
+        for (j=0; j<p; ++j) {
+            for (k=0, sum=0.0; k<m; ++k) {
+                sum += A[i*m+k] * B[k*p+j];
+            }
+            C[i*p+j] = sum;
+        }
+    }
+    for (i=0; i<n; ++i) {
+        for (j=0; j<p; ++j) {
+            for (k=0, sum=0.0; k<m; ++k) {
+                sum += A[i*m+k] * B[k*p+j];
+            }
+            C[i*p+j] = sum;
+        }
+    }
     struct timeval start, end;
     gettimeofday(&start,NULL);
   for (i=0; i<n; ++i) {
@@ -106,16 +122,7 @@ int main(int argc, char * argv[])
     perror("error");
     goto failure;
   }
-  //Warm up cache 1st
-    if (mult_mat(nrows, ncols, ncols2, A, B, &C, false)) {
-        perror("error");
-        goto failure;
-    }
-    //Warm up cache 2nd
-    if (mult_mat(nrows, ncols, ncols2, A, B, &C, false)) {
-        perror("error");
-        goto failure;
-    }
+
   if (mult_mat(nrows, ncols, ncols2, A, B, &C, true)) {
     perror("error");
     goto failure;
