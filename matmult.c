@@ -44,7 +44,7 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
 
 static int mult_mat(size_t const n, size_t const m, size_t const p,
                     double const * const A, double const * const B,
-                    double ** const Cp)
+                    double ** const Cp, bool measure)
 {
   size_t i, j, k;
   double sum;
@@ -53,7 +53,8 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
   if (!(C=malloc(n*p*sizeof(*C)))) {
     goto cleanup;
   }
-
+    struct timeval start, end;
+    gettimeofday(&start,NULL);
   for (i=0; i<n; ++i) {
     for (j=0; j<p; ++j) {
       for (k=0, sum=0.0; k<m; ++k) {
@@ -62,6 +63,12 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
       C[i*p+j] = sum;
     }
   }
+    gettimeofday(&end,NULL);
+    int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+    size_t data_size = n * m + m * p;
+    if (measure) {
+        printf("%zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, elapsed);
+    }
 
   *Cp = C;
 
@@ -100,26 +107,19 @@ int main(int argc, char * argv[])
     goto failure;
   }
   //Warm up cache 1st
-    if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
+    if (mult_mat(nrows, ncols, ncols2, A, B, &C, false)) {
         perror("error");
         goto failure;
     }
     //Warm up cache 2nd
-    if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
+    if (mult_mat(nrows, ncols, ncols2, A, B, &C, false)) {
         perror("error");
         goto failure;
     }
-    struct timeval start, end;
-    gettimeofday(&start,NULL);
-  if (mult_mat(nrows, ncols, ncols2, A, B, &C)) {
+  if (mult_mat(nrows, ncols, ncols2, A, B, &C, true)) {
     perror("error");
     goto failure;
   }
-    gettimeofday(&end,NULL);
-    int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-  size_t data_size = nrows * ncols + ncols * ncols2;
-  printf("%zu, %zu, %zu, %zu, %d\n", nrows, ncols, ncols2, data_size, elapsed);
-
   free(A);
   free(B);
   free(C);
