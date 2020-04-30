@@ -135,9 +135,10 @@ int main(int argc, char * argv[])
         free(A);
         free(B);
         free(C);
-        size_t inc = i / 10;
-        if (inc > 1) i += inc;
-        else i += 1;
+//        size_t inc = i / 10;
+//        if (inc > 1) i += inc;
+//        else i += 1;
+        i += 1;
     }
 
   return EXIT_SUCCESS;
