@@ -77,7 +77,7 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
       for (k=0, sum=0.0; k<m; ++k) {
         sum += A[i*m+k] * B[k*p+j];
       }
-//      C[i*p+j] = sum;
+      C[i*p+j] = sum;
     }
   }
     gettimeofday(&end,NULL);
@@ -106,6 +106,7 @@ int main(int argc, char * argv[])
   double * A=NULL, * B=NULL, * C=NULL;
 
   if (argc != 6) {
+      fprintf(stderr, "argc: %d", argc);
     fprintf(stderr, "usage: matmult nrows ncols ncols2\n");
     goto failure;
   }
