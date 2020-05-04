@@ -54,22 +54,7 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
   if (!(C=malloc(n*p*sizeof(*C)))) {
     goto cleanup;
   }
-    for (i=0; i<n; ++i) {
-        for (j=0; j<p; ++j) {
-            for (k=0, sum=0.0; k<m; ++k) {
-                sum += A[i*m+k] * B[k*p+j];
-            }
-            C[i*p+j] = sum;
-        }
-    }
-    for (i=0; i<n; ++i) {
-        for (j=0; j<p; ++j) {
-            for (k=0, sum=0.0; k<m; ++k) {
-                sum += A[i*m+k] * B[k*p+j];
-            }
-            C[i*p+j] = sum;
-        }
-    }
+
     struct timeval start, end;
     gettimeofday(&start,NULL);
   for (i=0; i<n; ++i) {
@@ -102,10 +87,10 @@ static int mult_mat(size_t const n, size_t const m, size_t const p,
 int main(int argc, char * argv[])
 {
   // size_t stored an unsigned integer
-  size_t nrows, ncols, ncols2, start_size, end_size;
+  size_t nrows, ncols, ncols2;
   double * A=NULL, * B=NULL, * C=NULL;
 
-  if (argc != 6) {
+  if (argc != 4) {
       fprintf(stderr, "argc: %d", argc);
     fprintf(stderr, "usage: matmult nrows ncols ncols2\n");
     goto failure;
@@ -114,32 +99,24 @@ int main(int argc, char * argv[])
   nrows = atoi(argv[1]);
   ncols = atoi(argv[2]);
   ncols2 = atoi(argv[3]);
-    start_size = atoi(argv[4]);
-    end_size = atoi(argv[5]);
-    size_t i = start_size;
-    while (i <= end_size) {
-        if (create_mat(i, i, &A)) {
+
+        if (create_mat(nrows, ncols, &A)) {
             perror("error");
             goto failure;
         }
 
-        if (create_mat(i, i, &B)) {
+        if (create_mat(ncols, ncols2, &B)) {
             perror("error");
             goto failure;
         }
 
-        if (mult_mat(i, i, i, A, B, &C, true)) {
+        if (mult_mat(nrows, ncols, ncols2, A, B, &C, true)) {
             perror("error");
             goto failure;
         }
         free(A);
         free(B);
         free(C);
-//        size_t inc = i / 10;
-//        if (inc > 1) i += inc;
-//        else i += 1;
-        i += 1;
-    }
 
   return EXIT_SUCCESS;
 
