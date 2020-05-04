@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#SBATCH --job-name=matmult
+#SBATCH --job-name=matmult_serial
 #SBATCH --partition=cpu
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=64G

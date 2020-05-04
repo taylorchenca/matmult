@@ -44,7 +44,6 @@ int main(int argc, char * argv[]) {
     nrows = atoi(argv[1]);
     ncols = atoi(argv[2]);
     ncols2 = atoi(argv[3]);
-    int c[nrows][ncols2];
     matmult_without_saving(nrows, ncols, ncols2);
 
     return 0;

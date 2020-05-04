@@ -30,7 +30,7 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
         for (j=0; j<ncols; ++j) {
             //Generate random value between min and max
             double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
-            mat[i*nrows+j] = val;
+            mat[i*ncols+j] = val;
         }
     }
   /** End random initialization **/
