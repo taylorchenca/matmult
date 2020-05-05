@@ -6,12 +6,14 @@
 
 void parallel_matmult(size_t const n, size_t const m, size_t const p,
         size_t thread_num, size_t tile_size,
-                  const double *A, const double *B, double *C)
+                  const double *A, const double *B, double ** const Cp)
 {
     omp_set_num_threads(thread_num);
 
     size_t i, j, k, outer_i, outer_j;
     double curr;
+    double * C=NULL;
+    C=malloc(n*p*sizeof(*C));
     struct timeval start, end;
     gettimeofday(&start,NULL);
     #pragma omp parallel for collapse(2) schedule(static)
@@ -32,7 +34,7 @@ void parallel_matmult(size_t const n, size_t const m, size_t const p,
     int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
     size_t data_size = n * m + m * p;
     printf("%zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, elapsed);
-
+    *Cp = C;
 }
 
 
