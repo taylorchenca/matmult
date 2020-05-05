@@ -94,7 +94,7 @@ int main(int argc, char * argv[])
         goto failure;
     }
 
-    parallel_matmult(nrows, ncols, ncols2, A, B, &C, tile_size, thread_num);
+    parallel_matmult(nrows, ncols, ncols2, tile_size, thread_num, A, B, &C);
 
     free(A);
     free(B);
