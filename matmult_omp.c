@@ -43,7 +43,6 @@ static const double max = 10;
 static int create_mat(size_t const nrows, size_t const ncols, double ** const matp)
 {
     double * mat=NULL;
-    size_t allocation_size = nrows*ncols*sizeof(*mat);
     if (!(mat=malloc(nrows*ncols*sizeof(*mat)))) {
         goto cleanup;
     }
