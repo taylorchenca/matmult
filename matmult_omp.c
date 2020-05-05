@@ -33,7 +33,7 @@ void parallel_matmult(size_t const n, size_t const m, size_t const p,
     gettimeofday(&end,NULL);
     int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
     size_t data_size = n * m + m * p;
-    printf("%zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, elapsed);
+    printf("%zu, %zu, %zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, thread_num, tile_size, elapsed);
     *Cp = C;
 }
 
