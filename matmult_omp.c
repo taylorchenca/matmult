@@ -9,7 +9,6 @@ void parallel_matmult(size_t const n, size_t const m, size_t const p,
                   const double *A, const double *B, double ** const Cp)
 {
     omp_set_num_threads(thread_num);
-
     size_t i, j, k, outer_i, outer_j;
     double curr;
     double * C=NULL;
@@ -59,7 +58,6 @@ static int create_mat(size_t const nrows, size_t const ncols, double ** const ma
     /** End random initialization **/
 
     *matp = mat;
-
     return 0;
 
     cleanup:
