@@ -10,7 +10,7 @@ void parallel_matmult(size_t const n, size_t const m, size_t const p,
 {
     omp_set_num_threads(thread_num);
 
-    int i, j, k, outer_i, outer_j;
+    size_t i, j, k, outer_i, outer_j;
     double curr;
     struct timeval start, end;
     gettimeofday(&start,NULL);
