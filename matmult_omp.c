@@ -178,9 +178,22 @@ int main(int argc, char * argv[]) {
     tile_size = atoi(argv[4]);
     thread_num = atoi(argv[5]);
 //    double A[nrows][ncols], B[ncols][ncols2], C[nrows][ncols2];
-    double ** A = malloc(sizeof(double) * nrows * ncols);
-    double ** B = malloc(sizeof(double) * ncols * ncols2);
-    double ** C = malloc(sizeof(double) * nrows * ncols2);
+    int i = 0;
+    double ** A = (double **)malloc(nrows * sizeof(double *));
+    for (i = 0; i < nrows; i++) {
+        A[i] = (double *)malloc(ncols * sizeof(double));
+    }
+    double ** B = (double **)malloc(ncols * sizeof(double *));
+    for (i = 0; i < ncols; i++) {
+        B[i] = (double *)malloc(ncols2 * sizeof(double));
+    }
+    double ** C = (double **)malloc(nrows * sizeof(double *));
+    for (i = 0; i < nrows; i++) {
+        C[i] = (double *)malloc(ncols2 * sizeof(double));
+    }
+//    double ** A = malloc(sizeof(double) * nrows * ncols);
+//    double ** B = malloc(sizeof(double) * ncols * ncols2);
+//    double ** C = malloc(sizeof(double) * nrows * ncols2);
     initialize_mat(nrows, ncols, A);
     initialize_mat(ncols, ncols2, B);
 
@@ -204,9 +217,19 @@ int main(int argc, char * argv[]) {
     size_t data_size = nrows * ncols + ncols * ncols2;
     printf("%zu, %zu, %zu, %zu, %zu, %zu, %d\n", nrows, ncols, ncols2, data_size, thread_num, tile_size, elapsed);
 
-//    free(A);
-//    free(B);
-//    free(C);
+
+    for (i = 0; i < nrows; i++) {
+        free(A[i]);
+    }
+    for (i = 0; i < ncols; i++) {
+        free(B[i]);
+    }
+    for (i = 0; i < nrows; i++) {
+        free(C[i]);
+    }
+    free(A);
+    free(B);
+    free(C);
 
     return EXIT_SUCCESS;
 
