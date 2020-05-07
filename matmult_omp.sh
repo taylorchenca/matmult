@@ -16,7 +16,7 @@ current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 log_file_name=matmult_omp-$current_time.log
 
 thread_num=8
-tile_size=128
+tile_size=32
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 1000 1000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 5000 5000 5000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 1000 2000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
