@@ -5,10 +5,6 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-//void matrix_matrix_mult_tile (
-//        int nr, int nc, int nq,
-//        double dst[][nq], double src1[][nc], double src2[][nq],
-//        int istart, int iend, int jstart, int jend, int kstart, int kend) {
 void matrix_matrix_mult_tile (
         double ** dst, double ** src1, double ** src2,
         int istart, int iend, int jstart, int jend, int kstart, int kend) {
