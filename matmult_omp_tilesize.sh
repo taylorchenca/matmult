@@ -1,18 +1,18 @@
 #!/bin/bash
 #
-#SBATCH --job-name=matmult_omp
+#SBATCH --job-name=matmult_omp_tilesize
 #SBATCH --partition=cpu
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=8G
 #SBATCH --nodes=1
-#SBATCH --output=matmult_omp-%j.out #SBATCH --time=10:00
+#SBATCH --output=matmult_omp_tilesize-%j.out #SBATCH --time=10:00
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hchen7@scu.edu #
 
 export OMP_PLACES=cores
 export OMP_PROC_BIND=spread
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
-log_file_name=matmult_omp-$current_time.log
+log_file_name=matmult_omp_tilesize-$current_time.log
 
 # For studying tile_size's impact on performance
 thread_num=8
