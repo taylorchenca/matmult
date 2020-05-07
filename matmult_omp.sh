@@ -15,10 +15,12 @@ export OMP_PROC_BIND=spread
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 log_file_name=matmult_omp-$current_time.log
 
-thread_num=8
 tile_size=32
+for thread_num in 1 2 4 8 12 14 16 20 24 28
+do
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 1000 1000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 5000 5000 5000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 1000 2000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 2000 5000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 9000 2500 3750 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
+done
