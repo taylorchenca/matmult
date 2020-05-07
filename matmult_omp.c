@@ -12,13 +12,11 @@ void matrix_matrix_mult_tile (
     for (i = istart; i <= iend; i++) {
         for (j = jstart; j <= jend; j++) {
             if (kstart == 0) dst[i][j] = 0.0;
-            double curr = dst[i][j];
             for (k = kstart; k <= kend; k++) {
-//                #pragma omp critical
-//                    dst[i][j] = dst[i][j] + src1[i][k] * src2[k][j];
-                curr +=src1[i][k] * src2[k][j];
+                double curr = src1[i][k] * src2[k][j];
+                #pragma omp atomic
+                    dst[i][j] = dst[i][j] + curr;
             } /* for k */
-            dst[i][j] = curr;
         } /* for j */
     } /* for i */
 } /* matrix_matrix_mult_tile */
