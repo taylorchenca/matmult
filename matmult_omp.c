@@ -10,7 +10,6 @@
 //        double dst[][nq], double src1[][nc], double src2[][nq],
 //        int istart, int iend, int jstart, int jend, int kstart, int kend) {
 void matrix_matrix_mult_tile (
-        int nr, int nc, int nq,
         double ** dst, double ** src1, double ** src2,
         int istart, int iend, int jstart, int jend, int kstart, int kend) {
     int i, j, k;
@@ -18,6 +17,7 @@ void matrix_matrix_mult_tile (
         for (j = jstart; j <= jend; j++) {
             if (kstart == 0) dst[i][j] = 0.0;
             for (k = kstart; k <= kend; k++) {
+                #pragma omp critical
                 dst[i][j] = dst[i][j] + src1[i][k] * src2[k][j];
             } /* for k */
         } /* for j */
@@ -28,13 +28,13 @@ void matrix_matrix_mult_tile (
 //         int nrows, int ncols, int ncols2,
 //         double dst[][ncols2], double src1[][ncols], double src2[][ncols2],
 //            int itilesize, int jtilesize, int ktilesize, size_t thread_num) {
-    void matrix_matrix_mult_by_tiling (
+void matrix_matrix_mult_by_tiling (
         int nrows, int ncols, int ncols2,
         double ** dst, double ** src1, double ** src2,
         int itilesize, int jtilesize, int ktilesize, size_t thread_num) {
     int istart, iend, jstart, jend, kstart, kend;
     omp_set_num_threads(thread_num);
-    #pragma omp parallel for collapse(3) schedule(static)
+    #pragma omp parallel for collapse(3) schedule(static) private(istart, jstart, kstart, iend, jend, kend) shared(dst, src1, src2)
     for (istart = 0; istart < nrows; istart += itilesize) {
         for (jstart = 0; jstart < ncols2; jstart += jtilesize) {
             for (kstart = 0; kstart < ncols; kstart += ktilesize) {
@@ -44,44 +44,44 @@ void matrix_matrix_mult_tile (
                 if (jend >= ncols2) jend = ncols2 - 1;
                 kend = kstart + ktilesize - 1;
                 if (kend >= ncols) kend = ncols - 1;
-                matrix_matrix_mult_tile(nrows, ncols, ncols2, dst, src1, src2, istart, iend, jstart, jend, kstart, kend);
+                matrix_matrix_mult_tile(dst, src1, src2, istart, iend, jstart, jend, kstart, kend);
             }
         }
     }
 }
 
-void parallel_matmult(size_t const n, size_t const m, size_t const p,
-        size_t thread_num, size_t tile_size,
-                  const double *A, const double *B, double ** const Cp) {
-    omp_set_num_threads(thread_num);
-    size_t i, j, k, outer_i, outer_j;
-    double curr;
-    double * C=NULL;
-    C=malloc(n*p*sizeof(*C));
-    printf("tile_size: %ld\n", tile_size);
-    struct timeval start, end;
-    gettimeofday(&start,NULL);
-    #pragma omp parallel for collapse(2) schedule(static)
-    for(outer_i = 0; outer_i < n; outer_i+= tile_size) {
-        for(outer_j = 0; outer_j < p; outer_j+= tile_size) {
-            for (i = outer_i; i < outer_i + tile_size; ++i) {
-                for (j = outer_j; j < outer_j + tile_size; ++j) {
-                    printf("i: %ld j: %ld\n", i, j);
-                    curr = C[i*p+j];
-                    for (k = 0; k < m; ++k) {
-                        curr += A[i*m+k] * B[k*p+j];
-                    }
-                    C[i*p+j] = curr;
-                }
-            }
-        }
-    }
-    gettimeofday(&end,NULL);
-    int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-    size_t data_size = n * m + m * p;
-    printf("%zu, %zu, %zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, thread_num, tile_size, elapsed);
-    *Cp = C;
-}
+//void parallel_matmult(size_t const n, size_t const m, size_t const p,
+//        size_t thread_num, size_t tile_size,
+//                  const double *A, const double *B, double ** const Cp) {
+//    omp_set_num_threads(thread_num);
+//    size_t i, j, k, outer_i, outer_j;
+//    double curr;
+//    double * C=NULL;
+//    C=malloc(n*p*sizeof(*C));
+//    printf("tile_size: %ld\n", tile_size);
+//    struct timeval start, end;
+//    gettimeofday(&start,NULL);
+//    #pragma omp parallel for collapse(2) schedule(static)
+//    for(outer_i = 0; outer_i < n; outer_i+= tile_size) {
+//        for(outer_j = 0; outer_j < p; outer_j+= tile_size) {
+//            for (i = outer_i; i < outer_i + tile_size; ++i) {
+//                for (j = outer_j; j < outer_j + tile_size; ++j) {
+//                    printf("i: %ld j: %ld\n", i, j);
+//                    curr = C[i*p+j];
+//                    for (k = 0; k < m; ++k) {
+//                        curr += A[i*m+k] * B[k*p+j];
+//                    }
+//                    C[i*p+j] = curr;
+//                }
+//            }
+//        }
+//    }
+//    gettimeofday(&end,NULL);
+//    int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+//    size_t data_size = n * m + m * p;
+//    printf("%zu, %zu, %zu, %zu, %zu, %zu, %d\n", n, m, p, data_size, thread_num, tile_size, elapsed);
+//    *Cp = C;
+//}
 
 
 static const double min = -10;
