@@ -6,7 +6,7 @@
 #SBATCH --mem-per-cpu=8G
 #SBATCH --nodes=1
 #SBATCH --output=matmult_omp-%j.out
-#SBATCH --time=10:00
+#SBATCH --time=59:00
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hchen7@scu.edu #
 
