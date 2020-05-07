@@ -5,7 +5,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=8G
 #SBATCH --nodes=1
-#SBATCH --output=matmult_omp_tilesize-%j.out #SBATCH --time=10:00
+#SBATCH --output=matmult_omp_tilesize-%j.out
+#SBATCH --time=10:00
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hchen7@scu.edu #
 

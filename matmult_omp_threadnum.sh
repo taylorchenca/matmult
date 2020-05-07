@@ -5,7 +5,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=8G
 #SBATCH --nodes=1
-#SBATCH --output=matmult_omp_threadnum-%j.out #SBATCH --time=10:00
+#SBATCH --output=matmult_omp_threadnum-%j.out
+#SBATCH --time=10:00
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hchen7@scu.edu #
 
@@ -15,7 +16,7 @@ current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 log_file_name=matmult_omp_threadnum-$current_time.log
 
 # For studying thread_num's impact on performance
-tile_size=128
+tile_size=32
 for thread_num in 1 2 4 8 12 14 16 20 24 28
 do
 /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 5000 5000 5000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
