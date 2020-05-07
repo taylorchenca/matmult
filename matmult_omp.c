@@ -130,8 +130,10 @@ static int create_2d_mat(size_t const nrows, size_t const ncols, double *** cons
 }
 
 void initialize_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
-    for (size_t i = 0; i < nrows; i++) {
-        for (size_t j = 0; j < ncols; j++) {
+    size_t i = 0;
+    size_t j = 0;
+    for (i = 0; i < nrows; i++) {
+        for (j = 0; j < ncols; j++) {
             double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
             mat[i][j] = val;
         }
@@ -139,8 +141,10 @@ void initialize_mat(size_t const nrows, size_t const ncols, double mat[][ncols])
 }
 
 void print_matrix(double * const A, size_t const n, size_t const m) {
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < m; j++) {
+    size_t i = 0;
+    size_t j = 0;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
             printf("%f ", A[i*m+j]);
         }
         printf("\n");
@@ -148,8 +152,10 @@ void print_matrix(double * const A, size_t const n, size_t const m) {
 }
 
 void print_2d_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
-    for (size_t i = 0; i < nrows; i++) {
-        for (size_t j = 0; j < ncols; j++) {
+    size_t i = 0;
+    size_t j = 0;
+    for (i = 0; i < nrows; i++) {
+        for (j = 0; j < ncols; j++) {
             printf("%f ", mat[i][j]);
         }
         printf("\n");
