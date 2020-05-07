@@ -5,9 +5,13 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
+//void matrix_matrix_mult_tile (
+//        int nr, int nc, int nq,
+//        double dst[][nq], double src1[][nc], double src2[][nq],
+//        int rstart, int rend, int cstart, int cend, int qstart, int qend) {
 void matrix_matrix_mult_tile (
         int nr, int nc, int nq,
-        double dst[][nq], double src1[][nc], double src2[][nq],
+        double ** dst, double ** src1, double ** src2,
         int rstart, int rend, int cstart, int cend, int qstart, int qend) {
     int r, c, q;
     for (r = rstart; r <= rend; r++) {
@@ -20,9 +24,13 @@ void matrix_matrix_mult_tile (
     } /* for r */
 } /* matrix_matrix_mult_tile */
 
-void matrix_matrix_mult_by_tiling (
-         int nr, int nc, int nq,
-         double dst[][nq], double src1[][nc], double src2[][nq],
+//void matrix_matrix_mult_by_tiling (
+//         int nr, int nc, int nq,
+//         double dst[][nq], double src1[][nc], double src2[][nq],
+//            int rtilesize, int ctilesize, int qtilesize, size_t thread_num) {
+    void matrix_matrix_mult_by_tiling (
+            int nr, int nc, int nq,
+            double ** dst, double ** src1, double ** src2,
             int rtilesize, int ctilesize, int qtilesize, size_t thread_num) {
     int rstart, rend, cstart, cend, qstart, qend;
     omp_set_num_threads(thread_num);
@@ -79,57 +87,58 @@ void parallel_matmult(size_t const n, size_t const m, size_t const p,
 
 static const double min = -10;
 static const double max = 10;
-static int create_mat(size_t const nrows, size_t const ncols, double ** const matp) {
-    double * mat=NULL;
-    if (!(mat=malloc(nrows*ncols*sizeof(*mat)))) {
-        goto cleanup;
-    }
-    srand(time(NULL));
-    /** Initialize matrix with random values **/
-    size_t i, j;
-    for (i=0; i<nrows; ++i) {
-        for (j=0; j<ncols; ++j) {
-            //Generate random value between min and max
-            double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
-            mat[i*ncols+j] = val;
-        }
-    }
-    /** End random initialization **/
+//static int create_mat(size_t const nrows, size_t const ncols, double ** const matp) {
+//    double * mat=NULL;
+//    if (!(mat=malloc(nrows*ncols*sizeof(*mat)))) {
+//        goto cleanup;
+//    }
+//    srand(time(NULL));
+//    /** Initialize matrix with random values **/
+//    size_t i, j;
+//    for (i=0; i<nrows; ++i) {
+//        for (j=0; j<ncols; ++j) {
+//            //Generate random value between min and max
+//            double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
+//            mat[i*ncols+j] = val;
+//        }
+//    }
+//    /** End random initialization **/
+//
+//    *matp = mat;
+//    return 0;
+//
+//    cleanup:
+//    free(mat);
+//    return -1;
+//}
 
-    *matp = mat;
-    return 0;
+//static int create_2d_mat(size_t const nrows, size_t const ncols, double *** const matp) {
+//    double * mat=NULL;
+//    if (!(mat=malloc(nrows*ncols*sizeof(*mat)))) {
+//        goto cleanup;
+//    }
+//    srand(time(NULL));
+//    /** Initialize matrix with random values **/
+//    size_t i, j;
+//    for (i=0; i<nrows; ++i) {
+//        for (j=0; j<ncols; ++j) {
+//            //Generate random value between min and max
+//            double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
+//            mat[i*ncols+j] = val;
+//        }
+//    }
+//    /** End random initialization **/
+//
+//    *matp = mat;
+//    return 0;
+//
+//    cleanup:
+//    free(mat);
+//    return -1;
+//}
 
-    cleanup:
-    free(mat);
-    return -1;
-}
-
-static int create_2d_mat(size_t const nrows, size_t const ncols, double *** const matp) {
-    double * mat=NULL;
-    if (!(mat=malloc(nrows*ncols*sizeof(*mat)))) {
-        goto cleanup;
-    }
-    srand(time(NULL));
-    /** Initialize matrix with random values **/
-    size_t i, j;
-    for (i=0; i<nrows; ++i) {
-        for (j=0; j<ncols; ++j) {
-            //Generate random value between min and max
-            double val = (max - min) * ( (double)rand() / (double)RAND_MAX ) + min;
-            mat[i*ncols+j] = val;
-        }
-    }
-    /** End random initialization **/
-
-    *matp = mat;
-    return 0;
-
-    cleanup:
-    free(mat);
-    return -1;
-}
-
-void initialize_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
+//void initialize_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
+    void initialize_mat(size_t const nrows, size_t const ncols, double ** mat) {
     size_t i = 0;
     size_t j = 0;
     for (i = 0; i < nrows; i++) {
@@ -140,27 +149,27 @@ void initialize_mat(size_t const nrows, size_t const ncols, double mat[][ncols])
     }
 }
 
-void print_matrix(double * const A, size_t const n, size_t const m) {
-    size_t i = 0;
-    size_t j = 0;
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < m; j++) {
-            printf("%f ", A[i*m+j]);
-        }
-        printf("\n");
-    }
-}
-
-void print_2d_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
-    size_t i = 0;
-    size_t j = 0;
-    for (i = 0; i < nrows; i++) {
-        for (j = 0; j < ncols; j++) {
-            printf("%f ", mat[i][j]);
-        }
-        printf("\n");
-    }
-}
+//void print_matrix(double * const A, size_t const n, size_t const m) {
+//    size_t i = 0;
+//    size_t j = 0;
+//    for (i = 0; i < n; i++) {
+//        for (j = 0; j < m; j++) {
+//            printf("%f ", A[i*m+j]);
+//        }
+//        printf("\n");
+//    }
+//}
+//
+//void print_2d_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
+//    size_t i = 0;
+//    size_t j = 0;
+//    for (i = 0; i < nrows; i++) {
+//        for (j = 0; j < ncols; j++) {
+//            printf("%f ", mat[i][j]);
+//        }
+//        printf("\n");
+//    }
+//}
 
 int main(int argc, char * argv[]) {
     size_t nrows, ncols, ncols2, tile_size, thread_num;
@@ -178,7 +187,7 @@ int main(int argc, char * argv[]) {
     tile_size = atoi(argv[4]);
     thread_num = atoi(argv[5]);
 //    double A[nrows][ncols], B[ncols][ncols2], C[nrows][ncols2];
-    int i = 0;
+    size_t i = 0;
     double ** A = (double **)malloc(nrows * sizeof(double *));
     for (i = 0; i < nrows; i++) {
         A[i] = (double *)malloc(ncols * sizeof(double));
