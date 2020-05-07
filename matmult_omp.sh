@@ -16,7 +16,7 @@ log_file_name=matmult_omp-$current_time.log
 
 for thread_num in 1 2 4 8 12 14 16 20 24 28
 do
-  export OMP_NUM_THREADS=$thread_num
+#  export OMP_NUM_THREADS=$thread_num
   for tile_size in 16 32 64 128 256 512
   do
   /WAVE/projects/COEN-319-Sp20/hchen7/hw2/matmult/matmult_omp 1000 1000 1000 $tile_size $thread_num >> /WAVE/projects/COEN-319-Sp20/hchen7/hw2/logs/$log_file_name
