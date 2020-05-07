@@ -3,6 +3,7 @@
 #include <omp.h>
 #include <time.h>
 #include <sys/time.h>
+#include <sys/resource.h>
 
 void matrix_matrix_mult_tile (
         int nr, int nc, int nq,
@@ -170,8 +171,10 @@ int main(int argc, char * argv[]) {
     ncols2 = atoi(argv[3]);
     tile_size = atoi(argv[4]);
     thread_num = atoi(argv[5]);
-    double A[nrows][ncols], B[ncols][ncols2], C[nrows][ncols2];
-
+//    double A[nrows][ncols], B[ncols][ncols2], C[nrows][ncols2];
+    double ** A = malloc(sizeof(double) * nrows * ncols);
+    double ** B = malloc(sizeof(double) * ncols * ncols2);
+    double ** C = malloc(sizeof(double) * nrows * ncols2);
     initialize_mat(nrows, ncols, A);
     initialize_mat(ncols, ncols2, B);
 

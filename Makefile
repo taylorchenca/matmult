@@ -6,7 +6,7 @@ matmult: matmult.c
 	gcc -O3 -Wall -Wextra -o $@ matmult.c
 
 matmult_omp: $(SRC)
-	gcc -O3 -Wall -Wextra -fopenmp -o $@ $(SRC)
+	gcc -O3 -Wall -Wextra -fopenmp -std=c99 -o $@ $(SRC)
 
 clean:
 	-rm -f matmult
