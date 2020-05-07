@@ -8,48 +8,47 @@
 //void matrix_matrix_mult_tile (
 //        int nr, int nc, int nq,
 //        double dst[][nq], double src1[][nc], double src2[][nq],
-//        int rstart, int rend, int cstart, int cend, int qstart, int qend) {
+//        int istart, int iend, int jstart, int jend, int kstart, int kend) {
 void matrix_matrix_mult_tile (
         int nr, int nc, int nq,
         double ** dst, double ** src1, double ** src2,
-        int rstart, int rend, int cstart, int cend, int qstart, int qend) {
-    int r, c, q;
-    for (r = rstart; r <= rend; r++) {
-        for (c = cstart; c <= cend; c++) {
-            if (qstart == 0) dst[r][c] = 0.0;
-            for (q = qstart; q <= qend; q++) {
-                dst[r][c] = dst[r][c] + src1[r][q] * src2[q][c];
-            } /* for q */
-        } /* for c */
-    } /* for r */
+        int istart, int iend, int jstart, int jend, int kstart, int kend) {
+    int i, j, k;
+    for (i = istart; i <= iend; i++) {
+        for (j = jstart; j <= jend; j++) {
+            if (kstart == 0) dst[i][j] = 0.0;
+            for (k = kstart; k <= kend; k++) {
+                dst[i][j] = dst[i][j] + src1[i][k] * src2[k][j];
+            } /* for k */
+        } /* for j */
+    } /* for i */
 } /* matrix_matrix_mult_tile */
 
 //void matrix_matrix_mult_by_tiling (
-//         int nr, int nc, int nq,
-//         double dst[][nq], double src1[][nc], double src2[][nq],
-//            int rtilesize, int ctilesize, int qtilesize, size_t thread_num) {
+//         int nrows, int ncols, int ncols2,
+//         double dst[][ncols2], double src1[][ncols], double src2[][ncols2],
+//            int itilesize, int jtilesize, int ktilesize, size_t thread_num) {
     void matrix_matrix_mult_by_tiling (
-            int nr, int nc, int nq,
-            double ** dst, double ** src1, double ** src2,
-            int rtilesize, int ctilesize, int qtilesize, size_t thread_num) {
-    int rstart, rend, cstart, cend, qstart, qend;
+        int nrows, int ncols, int ncols2,
+        double ** dst, double ** src1, double ** src2,
+        int itilesize, int jtilesize, int ktilesize, size_t thread_num) {
+    int istart, iend, jstart, jend, kstart, kend;
     omp_set_num_threads(thread_num);
     #pragma omp parallel for collapse(3) schedule(static)
-    for (rstart = 0; rstart < nr; rstart += rtilesize) {
-        for (cstart = 0; cstart < nc; cstart += ctilesize) {
-            for (qstart = 0; qstart < nq; qstart += qtilesize) {
-                rend = rstart + rtilesize - 1;
-                if (rend >= nr) rend = nr - 1;
-                cend = cstart + ctilesize - 1;
-                if (cend >= nc) cend = nc - 1;
-                qend = qstart + qtilesize - 1;
-                if (qend >= nq) qend = nq - 1;
-                matrix_matrix_mult_tile(nr, nc, nq, dst, src1, src2, rstart, rend, cstart, cend, qstart, qend);
+    for (istart = 0; istart < nrows; istart += itilesize) {
+        for (jstart = 0; jstart < ncols2; jstart += jtilesize) {
+            for (kstart = 0; kstart < ncols; kstart += ktilesize) {
+                iend = istart + itilesize - 1;
+                if (iend >= nrows) iend = nrows - 1;
+                jend = jstart + jtilesize - 1;
+                if (jend >= ncols) jend = ncols2 - 1;
+                kend = kstart + ktilesize - 1;
+                if (kend >= ncols2) kend = ncols - 1;
+                matrix_matrix_mult_tile(nrows, ncols, ncols2, dst, src1, src2, istart, iend, jstart, jend, kstart, kend);
             }
         }
     }
 }
-
 
 void parallel_matmult(size_t const n, size_t const m, size_t const p,
         size_t thread_num, size_t tile_size,
