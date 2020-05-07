@@ -41,9 +41,9 @@ void matrix_matrix_mult_tile (
                 iend = istart + itilesize - 1;
                 if (iend >= nrows) iend = nrows - 1;
                 jend = jstart + jtilesize - 1;
-                if (jend >= ncols) jend = ncols2 - 1;
+                if (jend >= ncols2) jend = ncols2 - 1;
                 kend = kstart + ktilesize - 1;
-                if (kend >= ncols2) kend = ncols - 1;
+                if (kend >= ncols) kend = ncols - 1;
                 matrix_matrix_mult_tile(nrows, ncols, ncols2, dst, src1, src2, istart, iend, jstart, jend, kstart, kend);
             }
         }
