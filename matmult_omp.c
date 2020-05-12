@@ -66,16 +66,16 @@ void set_zeros(size_t const nrows, size_t const ncols, double ** mat) {
     }
 }
 
-//void print_2d_mat(size_t const nrows, size_t const ncols, double mat[][ncols]) {
-//    size_t i = 0;
-//    size_t j = 0;
-//    for (i = 0; i < nrows; i++) {
-//        for (j = 0; j < ncols; j++) {
-//            printf("%f ", mat[i][j]);
-//        }
-//        printf("\n");
-//    }
-//}
+void print_2d_mat(size_t const nrows, size_t const ncols, double ** mat) {
+    size_t i = 0;
+    size_t j = 0;
+    for (i = 0; i < nrows; i++) {
+        for (j = 0; j < ncols; j++) {
+            printf("%f ", mat[i][j]);
+        }
+        printf("\n");
+    }
+}
 
 int main(int argc, char * argv[]) {
     size_t nrows, ncols, ncols2, tile_size, thread_num;
@@ -109,6 +109,11 @@ int main(int argc, char * argv[]) {
     initialize_mat(ncols, ncols2, B);
     set_zeros(nrows, ncols2, C);
 
+    printf("A\n");
+    print_2d_mat(nrows, ncols, A);
+    printf("B\n");
+    print_2d_mat(ncols, ncols2, B);
+
     struct timeval start, end;
     gettimeofday(&start,NULL);
     matrix_matrix_mult_by_tiling(nrows, ncols, ncols2, C, A, B, tile_size, tile_size, tile_size, thread_num);
@@ -116,7 +121,8 @@ int main(int argc, char * argv[]) {
     int elapsed = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
     size_t data_size = nrows * ncols + ncols * ncols2;
     printf("%zu, %zu, %zu, %zu, %zu, %zu, %d\n", nrows, ncols, ncols2, data_size, thread_num, tile_size, elapsed);
-
+    printf("C\n");
+    print_2d_mat(nrows, ncols2, C);
     for (i = 0; i < nrows; i++) {
         free(A[i]);
     }
