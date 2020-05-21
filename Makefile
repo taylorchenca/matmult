@@ -10,7 +10,7 @@ matmult_omp: $(SRC)
 	gcc -O3 -Wall -Wextra -fopenmp -o $@ $(SRC)
 
 matmult_omp_ref: $(REFSRC)
-	gcc -O3 -Wall -Wextra -fopenmp -o $@ $(REFSRC)
+	gcc -O3 -Wall -Wextra -fopenmp -o -std=c99 $@ $(REFSRC)
 
 clean:
 	-rm -f matmult
