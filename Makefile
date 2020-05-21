@@ -15,3 +15,4 @@ matmult_omp_ref: $(REFSRC)
 clean:
 	-rm -f matmult
 	-rm -f matmult_omp
+	-rm -f matmult_omp_ref
