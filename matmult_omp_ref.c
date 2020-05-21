@@ -111,7 +111,7 @@ main(int argc, char * argv[])
     }
   }
 
-  assert(optind == argc);
+  // assert(optind == argc);
 
   /* Validate input. */
   assert(num_threads > 0);
