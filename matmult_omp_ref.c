@@ -20,6 +20,8 @@
 /* bool */
 #include <stdbool.h> 
 
+#include <getopt.h>
+
 
 #define ROWMJR(R,C,NR,NC) (R*NC+C)
 #define COLMJR(R,C,NR,NC) (C*NR+R)
