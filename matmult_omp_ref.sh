@@ -2,7 +2,7 @@
 #
 #SBATCH --job-name=matmult_omp_ref
 #SBATCH --partition=cpu
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=28
 #SBATCH --mem-per-cpu=8G
 #SBATCH --nodes=1
 #SBATCH --output=matmult_omp_ref-%j.out
